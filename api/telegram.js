@@ -12,8 +12,15 @@ const DEMO_DRAFTS = {
     date: '2026-05-02',
     tags: ['kardiologia', 'sztuczna inteligencja', 'obrazowanie'],
     excerpt: 'Przegląd z JACC Cardiovascular Imaging porządkuje aktualne architektury głębokiego uczenia w analizie obrazów serca i pokazuje, gdzie kończy się obietnica, a zaczyna kliniczne zastosowanie.',
-    image: 'https://image.pollinations.ai/prompt/professional%20medical%20illustration%20deep%20learning%20neural%20network%20analyzing%20cardiac%20MRI%20scan%2C%20teal%20and%20mint%20color%20palette%2C%20clean%20editorial%20style%2C%20no%20text%2C%20no%20labels?width=1200&height=600&model=flux&nologo=true&seed=2602',
-    imageAlt: 'Ilustracja: sieć neuronowa analizująca obraz rezonansu magnetycznego serca',
+    image: 'https://images.unsplash.com/photo-1758691463165-ca9b5bc2b28a?w=1600&h=900&fit=crop&q=80',
+    imageAlt: 'Lekarz analizujący obraz rezonansu magnetycznego na ekranie laptopa',
+    imageOverlay: {
+      stats: [
+        { num: '3', label: 'typy zastosowań' },
+        { num: '12–24', label: 'miesiące synteza' },
+      ],
+      summary: 'Co głębokie uczenie naprawdę zmienia w obrazowaniu serca',
+    },
     bodyParagraphs: [
       'JACC Cardiovascular Imaging opublikował 24 kwietnia 2026 przegląd dotyczący aktualnego stanu architektur głębokiego uczenia w analizie obrazów serca. Tempo rozwoju w tej dziedzinie wymusza takie syntezy co 12–24 miesiące.',
       'Autorzy uporządkowali metody według trzech zastosowań: segmentacji, klasyfikacji oraz oceny ryzyka i wyników klinicznych. Podkreślają, że wzrost dokładności modelu w warunkach laboratoryjnych nie przekłada się automatycznie na korzyść kliniczną.',
@@ -74,6 +81,19 @@ function formatDate(iso) {
   return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
+function buildOverlay(overlay) {
+  if (!overlay) return '';
+  const stats = (overlay.stats || []).map(s =>
+    `<div class="stat"><span class="num">${escape(s.num)}</span><span class="label">${escape(s.label)}</span></div>`
+  ).join('\n        ');
+  return `<div class="overlay">
+      <div class="stats">
+        ${stats}
+      </div>
+      <p class="summary">${escape(overlay.summary || '')}</p>
+    </div>`;
+}
+
 function buildArticleHtml(draft) {
   const tags = draft.tags.map(t => `<span class="tag">${escape(t)}</span>`).join('\n      ');
   const paras = draft.bodyParagraphs.map(p => `<p>${escape(p)}</p>`).join('\n    ');
@@ -81,6 +101,7 @@ function buildArticleHtml(draft) {
   const heroImage = draft.image
     ? `<figure class="hero-image">
     <img src="${escape(draft.image)}" alt="${escape(draft.imageAlt || draft.title)}" loading="eager">
+    ${buildOverlay(draft.imageOverlay)}
   </figure>`
     : '';
 
@@ -187,6 +208,7 @@ async function publishDraft(draftId) {
     excerpt: draft.excerpt,
     image: draft.image || null,
     imageAlt: draft.imageAlt || null,
+    imageOverlay: draft.imageOverlay || null,
   });
 
   const newIdxContent = Buffer.from(

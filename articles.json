@@ -1,24 +1,20 @@
 [
   {
     "slug": "2026-05-02-jacc-imaging-moo5m2j9",
-    "title": "Architektury deep learning w analizie obrazów serca — przegląd JACC",
+    "title": "Architektury głębokiego uczenia w analizie obrazów serca — przegląd JACC",
     "date": "2026-05-02",
-    "tags": [
-      "kardio",
-      "AI",
-      "obrazowanie"
-    ],
-    "excerpt": "Przegląd z JACC Cardiovascular Imaging porządkuje aktualne architektury deep learning w analizie obrazów serca i pokazuje, gdzie kończy się hype, a zaczyna kliniczne zastosowanie."
+    "tags": ["kardiologia", "sztuczna inteligencja", "obrazowanie"],
+    "excerpt": "Przegląd z JACC Cardiovascular Imaging porządkuje aktualne architektury głębokiego uczenia w analizie obrazów serca i pokazuje, gdzie kończy się obietnica, a zaczyna kliniczne zastosowanie.",
+    "image": "https://image.pollinations.ai/prompt/professional%20medical%20illustration%20deep%20learning%20neural%20network%20analyzing%20cardiac%20MRI%20scan%2C%20teal%20and%20mint%20color%20palette%2C%20clean%20editorial%20style%2C%20no%20text%2C%20no%20labels?width=1200&height=600&model=flux&nologo=true&seed=2602",
+    "imageAlt": "Ilustracja: sieć neuronowa analizująca obraz rezonansu magnetycznego serca"
   },
   {
     "slug": "2026-05-02-ai-prawa-komora-ttvi",
-    "title": "AI ocenia funkcję prawej komory — i przewiduje wynik zabiegu na zastawce trójdzielnej",
+    "title": "Sztuczna inteligencja ocenia funkcję prawej komory — i przewiduje wynik zabiegu na zastawce trójdzielnej",
     "date": "2026-05-02",
-    "tags": [
-      "kardio",
-      "AI",
-      "echo"
-    ],
-    "excerpt": "Praca z J Am Soc Echocardiogr pokazuje konkretne miejsce dla AI w kardiologii strukturalnej: predykcja wyników po TTVI na podstawie automatycznej analizy pracy prawej komory."
+    "tags": ["kardiologia", "sztuczna inteligencja", "echokardiografia"],
+    "excerpt": "Praca z Journal of the American Society of Echocardiography pokazuje konkretne miejsce dla sztucznej inteligencji w kardiologii strukturalnej: predykcja wyników po przezcewnikowej naprawie zastawki trójdzielnej na podstawie automatycznej analizy pracy prawej komory.",
+    "image": "https://image.pollinations.ai/prompt/professional%20medical%20illustration%20artificial%20intelligence%20analyzing%20echocardiography%20heart%20right%20ventricle%2C%20teal%20and%20mint%20color%20palette%2C%20clean%20editorial%20style%2C%20no%20text%2C%20no%20labels?width=1200&height=600&model=flux&nologo=true&seed=2601",
+    "imageAlt": "Ilustracja: sztuczna inteligencja analizująca echokardiografię prawej komory"
   }
 ]

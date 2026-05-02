@@ -8,35 +8,37 @@ const SITE_URL = 'https://ai-medycyna.vercel.app';
 // Hardcoded demo drafts — will be replaced by real generator in Faza 2.
 const DEMO_DRAFTS = {
   'jacc-imaging': {
-    title: 'Architektury deep learning w analizie obrazów serca — przegląd JACC',
+    title: 'Architektury głębokiego uczenia w analizie obrazów serca — przegląd JACC',
     date: '2026-05-02',
-    tags: ['kardio', 'AI', 'obrazowanie'],
-    excerpt: 'Przegląd z JACC Cardiovascular Imaging porządkuje aktualne architektury deep learning w analizie obrazów serca i pokazuje, gdzie kończy się hype, a zaczyna kliniczne zastosowanie.',
+    tags: ['kardiologia', 'sztuczna inteligencja', 'obrazowanie'],
+    excerpt: 'Przegląd z JACC Cardiovascular Imaging porządkuje aktualne architektury głębokiego uczenia w analizie obrazów serca i pokazuje, gdzie kończy się obietnica, a zaczyna kliniczne zastosowanie.',
+    image: 'https://image.pollinations.ai/prompt/professional%20medical%20illustration%20deep%20learning%20neural%20network%20analyzing%20cardiac%20MRI%20scan%2C%20teal%20and%20mint%20color%20palette%2C%20clean%20editorial%20style%2C%20no%20text%2C%20no%20labels?width=1200&height=600&model=flux&nologo=true&seed=2602',
+    imageAlt: 'Ilustracja: sieć neuronowa analizująca obraz rezonansu magnetycznego serca',
     bodyParagraphs: [
-      'JACC Cardiovascular Imaging opublikował 24 kwietnia 2026 przegląd dotyczący aktualnego stanu architektur deep learning w analizie obrazów serca. Tempo rozwoju w tej dziedzinie wymusza takie syntezy co 12–24 miesiące.',
+      'JACC Cardiovascular Imaging opublikował 24 kwietnia 2026 przegląd dotyczący aktualnego stanu architektur głębokiego uczenia w analizie obrazów serca. Tempo rozwoju w tej dziedzinie wymusza takie syntezy co 12–24 miesiące.',
       'Autorzy uporządkowali metody według trzech zastosowań: segmentacji, klasyfikacji oraz oceny ryzyka i wyników klinicznych. Podkreślają, że wzrost dokładności modelu w warunkach laboratoryjnych nie przekłada się automatycznie na korzyść kliniczną.',
-      'Najwięcej obietnic, ale i pułapek, widać w transformerach i modelach foundation. Praca z różnymi modalnościami (CT, MR, echo, scyntygrafia) wymaga walidacji w lokalnym workflow, a nie tylko na publicznych zbiorach danych.',
+      'Najwięcej obietnic, ale i pułapek, widać w architekturach transformerowych i modelach foundation. Praca z różnymi modalnościami (tomografia komputerowa, rezonans magnetyczny, echokardiografia, scyntygrafia) wymaga walidacji w lokalnym workflow, a nie tylko na publicznych zbiorach danych.',
       'Z punktu widzenia kardiochirurga przegląd jest praktyczny: wskazuje, na jakim etapie są poszczególne metody i które są bliskie wdrożenia w realnym szpitalu, a które wciąż czekają na walidację kliniczną.',
     ],
     sourceText: 'van der Zande JL, Alvarez-Florez L, Volleberg RHJA et al. Deep Learning for Cardiac Image Analysis: Unveiling Advances in Deep Learning Architectures. JACC Cardiovasc Imaging. 2026 Apr 24.',
     sourceUrl: 'https://pubmed.ncbi.nlm.nih.gov/42065698/',
     linkedinPost:
-`Czy to jest moment, w którym deep learning w obrazowaniu serca przechodzi z laboratorium do szpitala?
+`Czy to jest moment, w którym głębokie uczenie w obrazowaniu serca przechodzi z laboratorium do szpitala?
 
-Przegląd opublikowany 24 kwietnia w JACC Cardiovascular Imaging mapuje aktualny stan architektur DL w kardio.
+Przegląd opublikowany 24 kwietnia w JACC Cardiovascular Imaging mapuje aktualny stan architektur głębokiego uczenia w kardiologii.
 
 Co warte uwagi:
 ✅ Metody uporządkowane według zastosowań: segmentacja, klasyfikacja, ocena ryzyka i wyniki kliniczne
-✅ Transformery i modele foundation — najwięcej obietnic, najwięcej pułapek
+✅ Architektury transformerowe i modele foundation — najwięcej obietnic, najwięcej pułapek
 ✅ Walidacja musi się dziać w lokalnym workflow, nie tylko na publicznych zbiorach
 
 [TU TWOJA UWAGA Z SALI: np. które z tych metod widzisz już w praktyce klinicznej, a które są nadal demo na konferencjach]
 
-Praktyczny przegląd dla każdego, kto myśli o wdrożeniu AI w obrazowaniu serca w realnym szpitalu.
+Praktyczny przegląd dla każdego, kto myśli o wdrożeniu sztucznej inteligencji w obrazowaniu serca w realnym szpitalu.
 
 Link w komentarzu.
 
-#kardiologia #kardiochirurgia #AIinMedicine #deepLearning #obrazowanie`,
+#kardiologia #kardiochirurgia #AIinMedicine #obrazowanie #medycyna`,
   },
 };
 
@@ -76,6 +78,11 @@ function buildArticleHtml(draft) {
   const tags = draft.tags.map(t => `<span class="tag">${escape(t)}</span>`).join('\n      ');
   const paras = draft.bodyParagraphs.map(p => `<p>${escape(p)}</p>`).join('\n    ');
   const dateFormatted = formatDate(draft.date);
+  const heroImage = draft.image
+    ? `<figure class="hero-image">
+    <img src="${escape(draft.image)}" alt="${escape(draft.imageAlt || draft.title)}" loading="eager">
+  </figure>`
+    : '';
 
   return `<!DOCTYPE html>
 <html lang="pl">
@@ -105,6 +112,8 @@ function buildArticleHtml(draft) {
 <article class="wrap article-page">
 
   <a class="back" href="../index.html#artykuly">← Wszystkie artykuły</a>
+
+  ${heroImage}
 
   <div class="meta">
     <time>${dateFormatted}</time>
@@ -176,6 +185,8 @@ async function publishDraft(draftId) {
     date: draft.date,
     tags: draft.tags,
     excerpt: draft.excerpt,
+    image: draft.image || null,
+    imageAlt: draft.imageAlt || null,
   });
 
   const newIdxContent = Buffer.from(

@@ -16,6 +16,7 @@ async function loadArticles() {
 
     list.innerHTML = articles.map(a => `
       <a class="article-card" href="articles/${a.slug}.html">
+        ${a.image ? `<div class="card-image"><img src="${escape(a.image)}" alt="${escape(a.imageAlt || a.title)}" loading="lazy"></div>` : ''}
         <div class="meta">
           <time>${formatDate(a.date)}</time>
           ${(a.tags || []).map(t => `<span class="tag">${escape(t)}</span>`).join('')}

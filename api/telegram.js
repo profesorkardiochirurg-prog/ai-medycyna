@@ -60,24 +60,109 @@ async function tg(method, payload) {
   return res.json();
 }
 
-async function postToLinkedIn(text, articleUrl, articleTitle, articleExcerpt) {
+async function uploadImageToLinkedIn(imageUrl) {
+  // 1. Register upload
+  const initRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${LINKEDIN_ACCESS_TOKEN}`,
+      'Content-Type': 'application/json',
+      'X-Restli-Protocol-Version': '2.0.0',
+    },
+    body: JSON.stringify({
+      registerUploadRequest: {
+        recipes: ['urn:li:digitalmediaRecipe:feedshare-image'],
+        owner: `urn:li:person:${LINKEDIN_USER_ID}`,
+        serviceRelationships: [{
+          relationshipType: 'OWNER',
+          identifier: 'urn:li:userGeneratedContent',
+        }],
+      },
+    }),
+  });
+
+  if (!initRes.ok) {
+    const t = await initRes.text();
+    throw new Error(`registerUpload ${initRes.status}: ${t.slice(0, 200)}`);
+  }
+
+  const initData = await initRes.json();
+  const uploadUrl =
+    initData?.value?.uploadMechanism?.['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest']?.uploadUrl;
+  const assetUrn = initData?.value?.asset;
+
+  if (!uploadUrl || !assetUrn) {
+    throw new Error('registerUpload zwrocil nieoczekiwany format');
+  }
+
+  // 2. Fetch image bytes from Unsplash
+  const imgRes = await fetch(imageUrl);
+  if (!imgRes.ok) {
+    throw new Error(`Pobranie obrazu z Unsplash ${imgRes.status}`);
+  }
+  const imgBuffer = await imgRes.arrayBuffer();
+
+  // 3. Upload to LinkedIn
+  const uploadRes = await fetch(uploadUrl, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${LINKEDIN_ACCESS_TOKEN}`,
+    },
+    body: Buffer.from(imgBuffer),
+  });
+
+  if (!uploadRes.ok) {
+    const t = await uploadRes.text();
+    throw new Error(`Upload obrazu ${uploadRes.status}: ${t.slice(0, 200)}`);
+  }
+
+  return assetUrn;
+}
+
+async function postToLinkedIn(text, articleUrl, articleTitle, articleExcerpt, imageUrl) {
   if (!LINKEDIN_ACCESS_TOKEN || !LINKEDIN_USER_ID) {
     throw new Error('LinkedIn nieskonfigurowany (brak tokena lub user ID)');
   }
+
+  // Try to upload image first; if it fails, fall back to ARTICLE category with link preview.
+  let assetUrn = null;
+  let imageError = null;
+  if (imageUrl) {
+    try {
+      assetUrn = await uploadImageToLinkedIn(imageUrl);
+    } catch (err) {
+      imageError = err.message;
+      console.error('Image upload failed, falling back to ARTICLE:', err);
+    }
+  }
+
+  // When using IMAGE category, embed URL in body since there's no link preview.
+  const fullText = assetUrn
+    ? `${text}\n\nCzytaj na: ${articleUrl}`
+    : text;
 
   const postBody = {
     author: `urn:li:person:${LINKEDIN_USER_ID}`,
     lifecycleState: 'PUBLISHED',
     specificContent: {
       'com.linkedin.ugc.ShareContent': {
-        shareCommentary: { text },
-        shareMediaCategory: 'ARTICLE',
-        media: [{
-          status: 'READY',
-          originalUrl: articleUrl,
-          title: { text: articleTitle.slice(0, 200) },
-          description: { text: (articleExcerpt || '').slice(0, 256) },
-        }],
+        shareCommentary: { text: fullText },
+        shareMediaCategory: assetUrn ? 'IMAGE' : 'ARTICLE',
+        media: [
+          assetUrn
+            ? {
+                status: 'READY',
+                media: assetUrn,
+                title: { text: articleTitle.slice(0, 200) },
+                description: { text: (articleExcerpt || '').slice(0, 256) },
+              }
+            : {
+                status: 'READY',
+                originalUrl: articleUrl,
+                title: { text: articleTitle.slice(0, 200) },
+                description: { text: (articleExcerpt || '').slice(0, 256) },
+              },
+        ],
       },
     },
     visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },
@@ -100,11 +185,11 @@ async function postToLinkedIn(text, articleUrl, articleTitle, articleExcerpt) {
 
   const data = await liRes.json();
   const postId = data.id || liRes.headers.get('x-restli-id') || liRes.headers.get('x-linkedin-id');
-  if (postId) {
-    const encoded = encodeURIComponent(postId);
-    return `https://www.linkedin.com/feed/update/${encoded}/`;
-  }
-  return 'https://www.linkedin.com/feed/';
+  const url = postId
+    ? `https://www.linkedin.com/feed/update/${encodeURIComponent(postId)}/`
+    : 'https://www.linkedin.com/feed/';
+
+  return { url, withImage: !!assetUrn, imageError };
 }
 
 async function ghApi(path, options = {}) {
@@ -419,15 +504,19 @@ Po Publikuj artykuł trafi na stronę i dostaniesz osobno tekst LinkedIn do skop
 
           if (draft && draft.linkedinPost && LINKEDIN_ACCESS_TOKEN && LINKEDIN_USER_ID) {
             try {
-              const liUrl = await postToLinkedIn(
+              const liResult = await postToLinkedIn(
                 draft.linkedinPost,
                 url,
                 draft.title,
                 draft.excerpt,
+                draft.image,
               );
+              const imgStatus = liResult.withImage
+                ? '✅ z obrazem (upload do LinkedIn)'
+                : `⚠️ bez obrazu (link preview, fallback): ${liResult.imageError || 'brak obrazu'}`;
               await tg('sendMessage', {
                 chat_id: chatId,
-                text: `✅ *Opublikowano na LinkedIn*\n\n${liUrl}`,
+                text: `✅ *Opublikowano na LinkedIn*\n\n${liResult.url}\n\n_${imgStatus}_`,
                 parse_mode: 'Markdown',
                 disable_web_page_preview: false,
               });

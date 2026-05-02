@@ -1,0 +1,10 @@
+{
+  "name": "ai-medycyna",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Strona dr Radoslaw Litwinowicz - AI w medycynie + bot Telegram",
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "title": "AI-QCT mierzy fenotyp blaszek miażdżycowych — co to zmienia w prewencji pierwotnej",
+  "date": "2026-05-02",
+  "tags": [
+    "kardiologia",
+    "sztuczna inteligencja",
+    "tomografia komputerowa"
+  ],
+  "excerpt": "Praca z European Journal of Preventive Cardiology pokazuje, że algorytm AI-QCT analizujący tomografię komputerową tętnic wieńcowych zmienia ocenę ryzyka u pacjentów z lipoproteiną(a) — i może przeklasyfikować decyzje terapeutyczne w prewencji pierwotnej.",
+  "image": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&h=900&fit=crop&q=80",
+  "imageAlt": "Sprzęt medyczny — tomograf komputerowy w pracowni",
+  "imageOverlay": {
+    "stats": [
+      {
+        "num": "29.04",
+        "label": "publikacja 2026"
+      },
+      {
+        "num": "EJPC",
+        "label": "źródło"
+      }
+    ],
+    "summary": "AI-QCT jako narzędzie do oceny fenotypu blaszki — pierwotna prewencja u pacjentów z Lp(a)"
+  },
+  "bodyParagraphs": [
+    "European Journal of Preventive Cardiology opublikował 29 kwietnia 2026 pracę o zastosowaniu algorytmu AI-QCT do analizy fenotypu blaszek miażdżycowych w tomografii komputerowej tętnic wieńcowych u pacjentów z podwyższoną lipoproteiną(a).",
+    "Autorzy pokazują, że AI-QCT rozróżnia blaszki wysokiego ryzyka (low-attenuation, positive remodeling, spotty calcification) z większą powtarzalnością niż ocena manualna. To istotne, bo Lp(a) to klasyczny czynnik ryzyka, w którym tradycyjna ocena ilościowa zwężenia może niedoszacowywać prawdziwego zagrożenia.",
+    "Implikacja kliniczna: u części pacjentów wynik AI-QCT przeklasyfikował decyzję — z konserwatywnej obserwacji w kierunku intensyfikacji terapii lipid-lowering. Algorytm nie zastępuje radiologa, ale dorzuca wymiar fenotypu, który był dotąd opisowy.",
+    "Z punktu widzenia prewencji pierwotnej to konkretny use case AI w kardiologii — narzędzie wspierające stratyfikację, nie diagnozę. Walidacja w lokalnym workflow pozostaje warunkiem bezpiecznego wdrożenia."
+  ],
+  "sourceText": "Verpalen VA, Coerkamp CF, Malkasian S et al. The impact of lipoprotein(a) on coronary atherosclerotic plaque phenotype in primary prevention. Eur J Prev Cardiol. 2026 Apr 29.",
+  "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/42054506/",
+  "linkedinPost": "Czy AI w tomografii komputerowej tętnic wieńcowych powinno współ-decydować o tym, kto dostaje intensywniejszą terapię lipid-lowering?\n\nPraca opublikowana 29 kwietnia w European Journal of Preventive Cardiology.\n\nCo zrobili:\n✅ Algorytm AI-QCT analizujący fenotyp blaszki miażdżycowej w angio-CT\n✅ Pacjenci z podwyższoną lipoproteiną(a) — klasyczny czynnik ryzyka\n✅ Porównanie z tradycyjną oceną ilościową zwężenia\n\nWyniki:\n👉 AI-QCT rozróżnia blaszki wysokiego ryzyka z lepszą powtarzalnością\n👉 U części pacjentów wynik przeklasyfikował decyzję — z obserwacji w intensyfikację terapii\n👉 Tradycyjna ocena może niedoszacowywać zagrożenia w obecności Lp(a)\n\n[TU TWOJA UWAGA Z SALI: np. czy widzisz w praktyce klinicznej, że pacjenci z Lp(a) bywają niedoszacowani w klasycznym risk score]\n\nPraktyczne narzędzie w prewencji pierwotnej — wsparcie stratyfikacji, nie diagnozy.\n\nLink w komentarzu.\n\n#kardiologia #kardiochirurgia #AIinMedicine #tomografia #prewencja"
+}

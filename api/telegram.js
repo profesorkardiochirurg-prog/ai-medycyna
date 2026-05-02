@@ -449,14 +449,14 @@ function buildArticleHtml(draft, slug) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${escape(draft.title)} | Inteligentny Skalpel</title>
+<title>${escape(draft.title)} | Radosław Litwinowicz</title>
 <meta name="description" content="${escape(draft.excerpt)}">
 <meta property="og:type" content="article">
 <meta property="og:title" content="${escape(draft.title)}">
 <meta property="og:description" content="${escape(draft.excerpt)}">
 <meta property="og:image" content="${escape(ogImage)}">
 <meta property="og:url" content="${escape(articleUrl)}">
-<meta property="og:site_name" content="Inteligentny Skalpel">
+<meta property="og:site_name" content="Radosław Litwinowicz">
 <meta property="og:locale" content="pl_PL">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escape(draft.title)}">
@@ -469,16 +469,17 @@ function buildArticleHtml(draft, slug) {
 </head>
 <body>
 
-<header class="masthead masthead-compact">
-  <div class="wrap">
-    <a href="../index.html" class="wordmark-link" aria-label="Inteligentny Skalpel — strona główna">
-      <h1 class="wordmark">Inteligentny Skalpel</h1>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="../index.html" class="topbar-brand">
+      <span class="brand-mark">RL</span>
+      <span class="brand-name">Radosław Litwinowicz</span>
     </a>
-    <nav class="topnav">
-      <a href="../index.html#artykuly">Artykuły</a>
-      <a href="../index.html#o-autorze">O autorze</a>
-      <a href="https://www.linkedin.com/in/rados%C5%82aw-litwinowicz-0b57b8262" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://x.com/BehindScalpel" target="_blank" rel="noopener">X</a>
+    <nav class="topbar-nav">
+      <a href="../index.html#about">O mnie</a>
+      <a href="../index.html#themes">AI w medycynie</a>
+      <a href="../index.html#articles">Artykuły</a>
+      <a href="../index.html#contact">Kontakt</a>
     </nav>
   </div>
 </header>
@@ -518,8 +519,8 @@ function buildArticleHtml(draft, slug) {
 
 <footer class="site-footer">
   <div class="wrap">
-    <p class="footer-mark">Inteligentny Skalpel</p>
-    <p class="footer-copy">© 2026 Radosław Litwinowicz · <a href="https://www.linkedin.com/in/rados%C5%82aw-litwinowicz-0b57b8262" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://x.com/BehindScalpel" target="_blank" rel="noopener">X</a></p>
+    <p class="footer-mark">Radosław Litwinowicz</p>
+    <p class="footer-copy">© 2026 · Kardiochirurg · AI w medycynie</p>
   </div>
 </footer>
 

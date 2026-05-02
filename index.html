@@ -4,104 +4,176 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#050d1c">
-<title>Inteligentny Skalpel — AI w medycynie z perspektywy bloku operacyjnego</title>
-<meta name="description" content="Niezależny serwis o sztucznej inteligencji w medycynie, kardiologii i kardiochirurgii. Z perspektywy bloku operacyjnego. Komentarze i analizy ze źródłami.">
+<title>Radosław Litwinowicz — kardiochirurg analizujący AI w medycynie</title>
+<meta name="description" content="Kardiochirurg. Analizuje, jak sztuczna inteligencja zmienia decyzje medyczne — diagnostykę, terapię i system ochrony zdrowia.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Inteligentny Skalpel — AI w medycynie z perspektywy bloku operacyjnego">
-<meta property="og:description" content="Niezależny serwis o sztucznej inteligencji w medycynie, kardiologii i kardiochirurgii.">
+<meta property="og:title" content="Radosław Litwinowicz — kardiochirurg analizujący AI w medycynie">
+<meta property="og:description" content="Kardiochirurg. Analizuje, jak sztuczna inteligencja zmienia decyzje medyczne.">
 <meta property="og:url" content="https://ai-medycyna.vercel.app">
-<meta property="og:site_name" content="Inteligentny Skalpel">
+<meta property="og:site_name" content="Radosław Litwinowicz">
 <meta property="og:locale" content="pl_PL">
 <link rel="stylesheet" href="assets/styles.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="layout">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="#top" class="topbar-brand">
+      <span class="brand-mark">RL</span>
+      <span class="brand-name">Radosław Litwinowicz</span>
+    </a>
+    <nav class="topbar-nav">
+      <a href="#about">O mnie</a>
+      <a href="#themes">AI w medycynie</a>
+      <a href="#articles">Artykuły</a>
+      <a href="#media">Media</a>
+      <a href="#contact">Kontakt</a>
+    </nav>
+  </div>
+</header>
 
-  <aside class="sidebar">
-    <div class="sidebar-inner">
+<a id="top"></a>
 
-      <a href="index.html" class="brand-link" aria-label="Inteligentny Skalpel">
-        <div class="brand">
-          <span class="brand-mark">IS</span>
-          <span class="brand-name">Inteligentny Skalpel</span>
-        </div>
-      </a>
-
-      <div class="profile-photo" aria-label="Portret autora">
-        <div class="profile-photo-placeholder">
-          <span>Portret</span>
-          <span class="placeholder-hint">wkrótce</span>
-        </div>
-      </div>
-
-      <h1 class="profile-name">dr Radosław Litwinowicz</h1>
-      <p class="profile-role">Kardiochirurg · Redaktor naczelny</p>
-
-      <p class="profile-bio">
-        Współautor publikacji w <em>Journal of Thoracic Disease</em> i międzynarodowych monografii. Twórca podcastu <em>Krew i Krzem</em>. Inicjator konkursu grantowego dla studenckich kół naukowych Wydziału Medycznego Politechniki Bydgoskiej.
-      </p>
-
-      <ul class="contact-list">
-        <li>
-          <a href="mailto:radek.litwinowicz@gmail.com">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 5h18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm9 8.5L20.5 7H3.5L12 13.5z"/></svg>
-            <span>radek.litwinowicz@gmail.com</span>
-          </a>
-        </li>
-        <li>
-          <a href="https://x.com/BehindScalpel" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-            <span>@BehindScalpel</span>
-          </a>
-        </li>
-        <li>
-          <a href="https://www.linkedin.com/in/rados%C5%82aw-litwinowicz-0b57b8262" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 11-.01-4.13 2.06 2.06 0 010 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
-            <span>LinkedIn</span>
-          </a>
-        </li>
-        <li>
-          <a href="https://www.youtube.com/@krewikrzem" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23.5 6.2c-.3-1-1.1-1.8-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6c-1 .3-1.8 1.1-2.1 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8c.3 1 1.1 1.8 2.1 2.1 1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6c1-.3 1.8-1.1 2.1-2.1.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
-            <span>Podcast: Krew i Krzem</span>
-          </a>
-        </li>
-      </ul>
-
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <p class="hero-eyebrow">
+      Kardiochirurg · Profesor &lt;40 · AI w medycynie
+    </p>
+    <h1 class="hero-title">
+      Medycyna się zmienia.<br>
+      <span class="hero-title-accent">Pytanie: czy lekarze nadążają?</span>
+    </h1>
+    <p class="hero-sub">
+      Operuję serca. Pracuję z danymi. Analizuję, jak sztuczna inteligencja zmienia decyzje medyczne — w diagnostyce, terapii i systemie ochrony zdrowia.
+    </p>
+    <div class="hero-actions">
+      <a href="#articles" class="btn btn-primary">Czytaj artykuły</a>
+      <a href="#contact" class="btn btn-ghost">Kontakt</a>
     </div>
-  </aside>
+  </div>
+</section>
 
-  <main class="content">
+<section id="about" class="section section-about">
+  <div class="wrap-narrow">
+    <p class="section-eyebrow">O mnie</p>
+    <p class="big-statement">
+      Nie interesuje mnie medycyna sprzed 20 lat. Interesuje mnie, co będzie za 10.
+    </p>
+    <p class="big-statement-sub">
+      Operuję serca. Pracuję z danymi. Analizuję wpływ AI na decyzje kliniczne.
+    </p>
+  </div>
+</section>
 
-    <header class="content-hero">
-      <p class="hero-eyebrow">Niezależny serwis</p>
-      <h2 class="hero-title">AI w medycynie</h2>
-      <p class="hero-tagline">Z perspektywy bloku operacyjnego.</p>
-      <p class="hero-lead">Komentarze i analizy publikacji o sztucznej inteligencji w kardiologii, kardiochirurgii i medycynie. Z odniesieniem do źródeł, bez przesady. Po polsku.</p>
-    </header>
+<section id="themes" class="section">
+  <div class="wrap">
+    <div class="section-header">
+      <p class="section-eyebrow">Tematy</p>
+      <h2 class="section-title">AI w medycynie — co naprawdę się zmienia</h2>
+    </div>
+    <div class="themes-grid">
+      <article class="theme-card">
+        <div class="theme-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h4l2-5 4 10 2-5h6"/></svg>
+        </div>
+        <h3 class="theme-title">Diagnostyka</h3>
+        <p class="theme-text">
+          Algorytmy widzą wzorce w EKG, echu i tomografii, których człowiek nie zauważa. Pytanie nie czy używać — tylko jak walidować w lokalnym workflow.
+        </p>
+      </article>
+      <article class="theme-card">
+        <div class="theme-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21V11l9-8 9 8v10"/><path d="M9 21v-7h6v7"/></svg>
+        </div>
+        <h3 class="theme-title">Decyzje terapeutyczne</h3>
+        <p class="theme-text">
+          Modele predykcyjne zmieniają kwalifikację do zabiegów. Selekcja pacjenta przesuwa się z intuicji w stronę danych — także w kardiochirurgii strukturalnej.
+        </p>
+      </article>
+      <article class="theme-card">
+        <div class="theme-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+        </div>
+        <h3 class="theme-title">System ochrony zdrowia</h3>
+        <p class="theme-text">
+          AI w szpitalu to nie magia, tylko inżynieria. Polskie warunki kliniczne wymagają polskiej walidacji — i lokalnie odpowiedzialnych zespołów.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
 
-    <section id="artykuly" class="section">
-      <div class="section-header">
-        <h2>Najnowsze</h2>
-        <div class="section-line"></div>
+<section id="articles" class="section section-articles">
+  <div class="wrap">
+    <div class="section-header">
+      <p class="section-eyebrow">Komentarze</p>
+      <h2 class="section-title">Artykuły</h2>
+      <p class="section-lead">
+        Komentarze do publikacji o sztucznej inteligencji w medycynie. Z odniesieniem do źródeł, bez przesady. Po polsku.
+      </p>
+    </div>
+    <div id="article-list" class="articles">
+      <p class="loading">Wczytuję artykuły…</p>
+    </div>
+  </div>
+</section>
+
+<section id="media" class="section section-media">
+  <div class="wrap">
+    <div class="section-header">
+      <p class="section-eyebrow">Media · Wystąpienia · Podcasty</p>
+      <h2 class="section-title">Gdzie jeszcze</h2>
+    </div>
+    <div class="media-grid">
+      <a class="media-card" href="https://www.youtube.com/@krewikrzem" target="_blank" rel="noopener">
+        <p class="media-tag">Podcast</p>
+        <h3 class="media-title">Krew i Krzem</h3>
+        <p class="media-text">10+ odcinków o medycynie i technologii. Z Mateuszem Zborowskim — most między salą operacyjną a Krzemową Doliną.</p>
+        <p class="media-cta">YouTube →</p>
+      </a>
+      <div class="media-card">
+        <p class="media-tag">Wystąpienia</p>
+        <h3 class="media-title">U Tomasza Drwala</h3>
+        <p class="media-text">Rozmowa o tym, jak naprawdę wygląda kardiochirurgia od środka — i co zostaje z roli lekarza w dobie AI.</p>
+        <p class="media-cta media-cta-ghost">Wkrótce link</p>
       </div>
-      <div id="article-list" class="articles">
-        <p class="loading">Wczytuję artykuły…</p>
+      <div class="media-card">
+        <p class="media-tag">Akademickie</p>
+        <h3 class="media-title">Wydział Medyczny PBŚ</h3>
+        <p class="media-text">Inicjator konkursu grantowego dla studenckich kół naukowych Politechniki Bydgoskiej. Budowa kultury robienia nauki, nie tylko mówienia o niej.</p>
+        <p class="media-cta media-cta-ghost">Wkrótce link</p>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-  </main>
-
-</div>
+<section id="contact" class="section section-cta">
+  <div class="wrap-narrow">
+    <p class="section-eyebrow">Kontakt</p>
+    <h2 class="cta-title">Współpraca, media, wystąpienia</h2>
+    <p class="cta-text">
+      Otwarty na rozmowy o badaniach, podcastach, panelach eksperckich i komentarzach medialnych w obszarze AI w medycynie i kardiochirurgii.
+    </p>
+    <a href="mailto:radek.litwinowicz@gmail.com" class="btn btn-primary btn-large">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M3 5h18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm9 8.5L20.5 7H3.5L12 13.5z"/></svg>
+      radek.litwinowicz@gmail.com
+    </a>
+    <div class="cta-socials">
+      <a href="https://www.linkedin.com/in/rados%C5%82aw-litwinowicz-0b57b8262" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://x.com/BehindScalpel" target="_blank" rel="noopener">X / @BehindScalpel</a>
+      <a href="https://www.youtube.com/@krewikrzem" target="_blank" rel="noopener">YouTube / Krew i Krzem</a>
+    </div>
+  </div>
+</section>
 
 <footer class="site-footer">
   <div class="wrap">
-    <p class="footer-mark">Inteligentny Skalpel</p>
-    <p class="footer-copy">© 2026 Radosław Litwinowicz · <a href="https://www.linkedin.com/in/rados%C5%82aw-litwinowicz-0b57b8262" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://x.com/BehindScalpel" target="_blank" rel="noopener">X</a></p>
+    <p class="footer-mark">Radosław Litwinowicz</p>
+    <p class="footer-copy">© 2026 · Kardiochirurg · AI w medycynie</p>
   </div>
 </footer>
 

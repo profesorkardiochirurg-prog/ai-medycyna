@@ -70,6 +70,58 @@ body {
   border-radius: var(--radius);
   padding: 28px 28px 32px;
 }
+
+.sidebar-composite {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--bg-deep);
+  box-shadow: 0 0 60px rgba(30, 197, 220, 0.08);
+}
+.composite-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.composite-socials {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 2;
+}
+.composite-socials a {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(5, 13, 28, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.75);
+  transition: all .15s ease;
+  text-decoration: none;
+}
+.composite-socials a svg {
+  width: 14px;
+  height: 14px;
+}
+.composite-socials a:hover {
+  color: var(--accent-bright);
+  border-color: rgba(30, 197, 220, 0.5);
+  background: rgba(20, 48, 74, 0.85);
+  transform: translateX(2px);
+  box-shadow: 0 0 16px rgba(30, 197, 220, 0.3);
+}
+@media (max-width: 900px) {
+  .composite-socials { top: 14px; left: 14px; gap: 6px; }
+  .composite-socials a { width: 32px; height: 32px; }
+}
 .brand-link { text-decoration: none; color: inherit; }
 .brand-link:hover { color: inherit; }
 .brand {

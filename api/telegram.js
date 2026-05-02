@@ -1,6 +1,8 @@
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const ALLOWED_CHAT_ID = String(process.env.ALLOWED_CHAT_ID || '');
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const LINKEDIN_ACCESS_TOKEN = process.env.LINKEDIN_ACCESS_TOKEN;
+const LINKEDIN_USER_ID = process.env.LINKEDIN_USER_ID;
 const REPO_OWNER = 'profesorkardiochirurg-prog';
 const REPO_NAME = 'ai-medycyna';
 const SITE_URL = 'https://ai-medycyna.vercel.app';
@@ -56,6 +58,53 @@ async function tg(method, payload) {
     body: JSON.stringify(payload),
   });
   return res.json();
+}
+
+async function postToLinkedIn(text, articleUrl, articleTitle, articleExcerpt) {
+  if (!LINKEDIN_ACCESS_TOKEN || !LINKEDIN_USER_ID) {
+    throw new Error('LinkedIn nieskonfigurowany (brak tokena lub user ID)');
+  }
+
+  const postBody = {
+    author: `urn:li:person:${LINKEDIN_USER_ID}`,
+    lifecycleState: 'PUBLISHED',
+    specificContent: {
+      'com.linkedin.ugc.ShareContent': {
+        shareCommentary: { text },
+        shareMediaCategory: 'ARTICLE',
+        media: [{
+          status: 'READY',
+          originalUrl: articleUrl,
+          title: { text: articleTitle.slice(0, 200) },
+          description: { text: (articleExcerpt || '').slice(0, 256) },
+        }],
+      },
+    },
+    visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },
+  };
+
+  const liRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${LINKEDIN_ACCESS_TOKEN}`,
+      'Content-Type': 'application/json',
+      'X-Restli-Protocol-Version': '2.0.0',
+    },
+    body: JSON.stringify(postBody),
+  });
+
+  if (!liRes.ok) {
+    const errText = await liRes.text();
+    throw new Error(`LinkedIn ${liRes.status}: ${errText.slice(0, 300)}`);
+  }
+
+  const data = await liRes.json();
+  const postId = data.id || liRes.headers.get('x-restli-id') || liRes.headers.get('x-linkedin-id');
+  if (postId) {
+    const encoded = encodeURIComponent(postId);
+    return `https://www.linkedin.com/feed/update/${encoded}/`;
+  }
+  return 'https://www.linkedin.com/feed/';
 }
 
 async function ghApi(path, options = {}) {
@@ -351,7 +400,34 @@ Po Publikuj artykuł trafi na stronę i dostaniesz osobno tekst LinkedIn do skop
             parse_mode: 'Markdown',
           });
 
-          if (draft && draft.linkedinPost) {
+          if (draft && draft.linkedinPost && LINKEDIN_ACCESS_TOKEN && LINKEDIN_USER_ID) {
+            try {
+              const liUrl = await postToLinkedIn(
+                draft.linkedinPost,
+                url,
+                draft.title,
+                draft.excerpt,
+              );
+              await tg('sendMessage', {
+                chat_id: chatId,
+                text: `✅ *Opublikowano na LinkedIn*\n\n${liUrl}`,
+                parse_mode: 'Markdown',
+                disable_web_page_preview: false,
+              });
+            } catch (liErr) {
+              console.error('LinkedIn post error:', liErr);
+              await tg('sendMessage', {
+                chat_id: chatId,
+                text: `⚠️ *Błąd LinkedIn* — artykuł na stronie się opublikował, ale LinkedIn odmówił:\n\n${liErr.message}\n\nTu masz tekst do ręcznego wklejenia:`,
+                parse_mode: 'Markdown',
+              });
+              await tg('sendMessage', {
+                chat_id: chatId,
+                text: draft.linkedinPost,
+              });
+            }
+          } else if (draft && draft.linkedinPost) {
+            // LinkedIn not configured — fall back to manual paste
             await tg('sendMessage', {
               chat_id: chatId,
               text: '📋 *Wersja LinkedIn — skopiuj i wklej:*',

@@ -117,32 +117,100 @@ function composeTweet(draft, articleUrl) {
   const lines = (draft.linkedinPost || '').split('\n').map(l => l.trim()).filter(Boolean);
   let hook = lines[0] || draft.title;
 
-  // X URL shortener t.co counts every URL as 23 chars regardless
+  // Extract hashtags from linkedinPost (agent's curated set, usually 3-5)
+  const linkedinHashtags = (draft.linkedinPost || '').match(/#\w+/g) || [];
+
+  // Build hashtag line (cap at ~80 chars budget to leave room for hook)
+  let tagsLine = '';
+  let used = 0;
+  for (const tag of linkedinHashtags) {
+    if (used + tag.length + 1 > 80) break;
+    tagsLine = tagsLine ? `${tagsLine} ${tag}` : tag;
+    used += tag.length + 1;
+  }
+  if (!tagsLine) {
+    tagsLine = '#kardiologia #AIinMedicine';
+  }
+
+  // X URL shortener t.co counts every URL as 23 chars
   const URL_BUDGET = 23 + 2; // url + 2 newlines
-  const HASHTAGS_BUDGET = 30;
-  const maxHook = 280 - URL_BUDGET - HASHTAGS_BUDGET - 2;
+  const TAGS_BUDGET = tagsLine.length + 2; // tags + 2 newlines
+  const maxHook = 280 - URL_BUDGET - TAGS_BUDGET;
 
   if (hook.length > maxHook) {
     hook = hook.slice(0, maxHook - 1).replace(/\s\S*$/, '') + '…';
   }
 
-  // 2 short hashtags from tags array (skip "sztuczna inteligencja" — too long)
-  const shortTags = (draft.tags || [])
-    .filter(t => t.length <= 12 && t !== 'sztuczna inteligencja')
-    .slice(0, 2)
-    .map(t => '#' + t.replace(/\s+/g, ''));
-  const tagsLine = shortTags.length ? shortTags.join(' ') : '#kardiologia #AI';
-
   return `${hook}\n\n${articleUrl}\n\n${tagsLine}`;
 }
 
-async function postToTwitter(tweetText) {
+async function uploadImageToTwitter(imageUrl) {
+  const imgRes = await fetch(imageUrl);
+  if (!imgRes.ok) throw new Error(`Image fetch ${imgRes.status}`);
+  const imgBuffer = Buffer.from(await imgRes.arrayBuffer());
+
+  const uploadUrl = 'https://upload.twitter.com/1.1/media/upload.json';
+
+  const boundary = '----TwitterFormBoundary' + crypto.randomBytes(8).toString('hex');
+  const headerStr = [
+    `--${boundary}`,
+    'Content-Disposition: form-data; name="media"; filename="image.jpg"',
+    'Content-Type: image/jpeg',
+    '',
+    '',
+  ].join('\r\n');
+  const footerStr = `\r\n--${boundary}--\r\n`;
+
+  const body = Buffer.concat([
+    Buffer.from(headerStr, 'utf-8'),
+    imgBuffer,
+    Buffer.from(footerStr, 'utf-8'),
+  ]);
+
+  // OAuth 1.0a signature — for multipart uploads, body params NOT included in signature base
+  const authHeader = buildTwitterAuthHeader('POST', uploadUrl);
+
+  const res = await fetch(uploadUrl, {
+    method: 'POST',
+    headers: {
+      'Authorization': authHeader,
+      'Content-Type': `multipart/form-data; boundary=${boundary}`,
+    },
+    body,
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Twitter media ${res.status}: ${errText.slice(0, 200)}`);
+  }
+
+  const data = await res.json();
+  return data.media_id_string;
+}
+
+async function postToTwitter(tweetText, imageUrl) {
   if (!TWITTER_API_KEY || !TWITTER_API_SECRET || !TWITTER_ACCESS_TOKEN || !TWITTER_ACCESS_TOKEN_SECRET) {
     throw new Error('Twitter API credentials not configured');
   }
 
+  // Try to upload image first; if fails, fall back to text-only tweet
+  let mediaId = null;
+  let imageError = null;
+  if (imageUrl) {
+    try {
+      mediaId = await uploadImageToTwitter(imageUrl);
+    } catch (err) {
+      imageError = err.message;
+      console.error('Twitter image upload failed, falling back to text-only:', err);
+    }
+  }
+
   const url = 'https://api.twitter.com/2/tweets';
   const authHeader = buildTwitterAuthHeader('POST', url);
+
+  const tweetBody = mediaId
+    ? { text: tweetText, media: { media_ids: [mediaId] } }
+    : { text: tweetText };
 
   const res = await fetch(url, {
     method: 'POST',
@@ -151,7 +219,7 @@ async function postToTwitter(tweetText) {
       'Content-Type': 'application/json',
       'User-Agent': 'ai-medycyna-bot',
     },
-    body: JSON.stringify({ text: tweetText }),
+    body: JSON.stringify(tweetBody),
   });
 
   if (!res.ok) {
@@ -161,10 +229,8 @@ async function postToTwitter(tweetText) {
 
   const data = await res.json();
   const tweetId = data?.data?.id;
-  if (tweetId) {
-    return `https://x.com/i/status/${tweetId}`;
-  }
-  return 'https://x.com';
+  const tweetUrl = tweetId ? `https://x.com/i/status/${tweetId}` : 'https://x.com';
+  return { url: tweetUrl, withImage: !!mediaId, imageError };
 }
 
 // ============ LinkedIn helpers ============
@@ -694,10 +760,13 @@ Po Publikuj artykuł trafi na stronę i dostaniesz osobno tekst LinkedIn do skop
           if (draft && TWITTER_API_KEY && TWITTER_ACCESS_TOKEN) {
             try {
               const tweetText = composeTweet(draft, url);
-              const tweetUrl = await postToTwitter(tweetText);
+              const twResult = await postToTwitter(tweetText, draft.image);
+              const twImgStatus = twResult.withImage
+                ? '✅ z obrazem (upload do X)'
+                : `⚠️ bez obrazu: ${twResult.imageError || 'brak obrazu w drafcie'}`;
               await tg('sendMessage', {
                 chat_id: chatId,
-                text: `✅ *Opublikowano na X*\n\n${tweetUrl}`,
+                text: `✅ *Opublikowano na X*\n\n${twResult.url}\n\n_${twImgStatus}_`,
                 parse_mode: 'Markdown',
               });
             } catch (twErr) {

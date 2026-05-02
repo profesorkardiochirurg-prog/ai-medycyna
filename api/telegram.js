@@ -449,33 +449,36 @@ function buildArticleHtml(draft, slug) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${escape(draft.title)} | dr Radosław Litwinowicz</title>
+<title>${escape(draft.title)} | Inteligentny Skalpel</title>
 <meta name="description" content="${escape(draft.excerpt)}">
 <meta property="og:type" content="article">
 <meta property="og:title" content="${escape(draft.title)}">
 <meta property="og:description" content="${escape(draft.excerpt)}">
 <meta property="og:image" content="${escape(ogImage)}">
 <meta property="og:url" content="${escape(articleUrl)}">
-<meta property="og:site_name" content="AI w Medycynie · dr Radosław Litwinowicz">
+<meta property="og:site_name" content="Inteligentny Skalpel">
 <meta property="og:locale" content="pl_PL">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escape(draft.title)}">
 <meta name="twitter:description" content="${escape(draft.excerpt)}">
 <meta name="twitter:image" content="${escape(ogImage)}">
 <link rel="stylesheet" href="../assets/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<header class="site-header">
+<header class="masthead masthead-compact">
   <div class="wrap">
-    <div class="brand">
-      <strong>dr Radosław Litwinowicz</strong>
-      <span>kardiochirurg</span>
-    </div>
+    <a href="../index.html" class="wordmark-link" aria-label="Inteligentny Skalpel — strona główna">
+      <h1 class="wordmark">Inteligentny Skalpel</h1>
+    </a>
     <nav class="topnav">
       <a href="../index.html#artykuly">Artykuły</a>
-      <a href="../index.html#o-mnie">O mnie</a>
+      <a href="../index.html#o-autorze">O autorze</a>
       <a href="https://www.linkedin.com/in/rados%C5%82aw-litwinowicz-0b57b8262" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://x.com/BehindScalpel" target="_blank" rel="noopener">X</a>
     </nav>
   </div>
 </header>
@@ -509,7 +512,8 @@ function buildArticleHtml(draft, slug) {
 
 <footer class="site-footer">
   <div class="wrap">
-    <p>© 2026 Radosław Litwinowicz · <a href="https://www.linkedin.com/in/rados%C5%82aw-litwinowicz-0b57b8262" target="_blank" rel="noopener">LinkedIn</a></p>
+    <p class="footer-mark">Inteligentny Skalpel</p>
+    <p class="footer-copy">© 2026 Radosław Litwinowicz · <a href="https://www.linkedin.com/in/rados%C5%82aw-litwinowicz-0b57b8262" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://x.com/BehindScalpel" target="_blank" rel="noopener">X</a></p>
   </div>
 </footer>
 

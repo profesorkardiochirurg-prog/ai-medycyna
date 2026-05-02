@@ -29,76 +29,14 @@
     "slug": "2026-05-02-jacc-imaging-moocruli",
     "title": "Architektury głębokiego uczenia w analizie obrazów serca — przegląd JACC",
     "date": "2026-05-02",
-    "tags": [
-      "kardiologia",
-      "sztuczna inteligencja",
-      "obrazowanie"
-    ],
+    "tags": ["kardiologia", "sztuczna inteligencja", "obrazowanie"],
     "excerpt": "Przegląd z JACC Cardiovascular Imaging porządkuje aktualne architektury głębokiego uczenia w analizie obrazów serca i pokazuje, gdzie kończy się obietnica, a zaczyna kliniczne zastosowanie.",
     "image": "https://images.unsplash.com/photo-1758691463165-ca9b5bc2b28a?w=1600&h=900&fit=crop&q=80",
     "imageAlt": "Lekarz analizujący obraz rezonansu magnetycznego na ekranie laptopa",
     "imageOverlay": {
       "stats": [
-        {
-          "num": "3",
-          "label": "typy zastosowań"
-        },
-        {
-          "num": "12–24",
-          "label": "miesiące synteza"
-        }
-      ],
-      "summary": "Co głębokie uczenie naprawdę zmienia w obrazowaniu serca"
-    }
-  },
-  {
-    "slug": "2026-05-02-jacc-imaging-moocfas3",
-    "title": "Architektury głębokiego uczenia w analizie obrazów serca — przegląd JACC",
-    "date": "2026-05-02",
-    "tags": [
-      "kardiologia",
-      "sztuczna inteligencja",
-      "obrazowanie"
-    ],
-    "excerpt": "Przegląd z JACC Cardiovascular Imaging porządkuje aktualne architektury głębokiego uczenia w analizie obrazów serca i pokazuje, gdzie kończy się obietnica, a zaczyna kliniczne zastosowanie.",
-    "image": "https://images.unsplash.com/photo-1758691463165-ca9b5bc2b28a?w=1600&h=900&fit=crop&q=80",
-    "imageAlt": "Lekarz analizujący obraz rezonansu magnetycznego na ekranie laptopa",
-    "imageOverlay": {
-      "stats": [
-        {
-          "num": "3",
-          "label": "typy zastosowań"
-        },
-        {
-          "num": "12–24",
-          "label": "miesiące synteza"
-        }
-      ],
-      "summary": "Co głębokie uczenie naprawdę zmienia w obrazowaniu serca"
-    }
-  },
-  {
-    "slug": "2026-05-02-jacc-imaging-moobghqq",
-    "title": "Architektury głębokiego uczenia w analizie obrazów serca — przegląd JACC",
-    "date": "2026-05-02",
-    "tags": [
-      "kardiologia",
-      "sztuczna inteligencja",
-      "obrazowanie"
-    ],
-    "excerpt": "Przegląd z JACC Cardiovascular Imaging porządkuje aktualne architektury głębokiego uczenia w analizie obrazów serca i pokazuje, gdzie kończy się obietnica, a zaczyna kliniczne zastosowanie.",
-    "image": "https://images.unsplash.com/photo-1758691463165-ca9b5bc2b28a?w=1600&h=900&fit=crop&q=80",
-    "imageAlt": "Lekarz analizujący obraz rezonansu magnetycznego na ekranie laptopa",
-    "imageOverlay": {
-      "stats": [
-        {
-          "num": "3",
-          "label": "typy zastosowań"
-        },
-        {
-          "num": "12–24",
-          "label": "miesiące synteza"
-        }
+        {"num": "3", "label": "typy zastosowań"},
+        {"num": "12–24", "label": "miesiące synteza"}
       ],
       "summary": "Co głębokie uczenie naprawdę zmienia w obrazowaniu serca"
     }
@@ -107,76 +45,30 @@
     "slug": "2026-05-02-2026-05-02-e758j0p0-moo9n8gu",
     "title": "AI-QCT mierzy fenotyp blaszek miażdżycowych — co to zmienia w prewencji pierwotnej",
     "date": "2026-05-02",
-    "tags": [
-      "kardiologia",
-      "sztuczna inteligencja",
-      "tomografia komputerowa"
-    ],
+    "tags": ["kardiologia", "sztuczna inteligencja", "tomografia komputerowa"],
     "excerpt": "Praca z European Journal of Preventive Cardiology pokazuje, że algorytm AI-QCT analizujący tomografię komputerową tętnic wieńcowych zmienia ocenę ryzyka u pacjentów z lipoproteiną(a) — i może przeklasyfikować decyzje terapeutyczne w prewencji pierwotnej.",
     "image": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&h=900&fit=crop&q=80",
     "imageAlt": "Sprzęt medyczny — tomograf komputerowy w pracowni",
     "imageOverlay": {
       "stats": [
-        {
-          "num": "29.04",
-          "label": "publikacja 2026"
-        },
-        {
-          "num": "EJPC",
-          "label": "źródło"
-        }
+        {"num": "29.04", "label": "publikacja 2026"},
+        {"num": "EJPC", "label": "źródło"}
       ],
       "summary": "AI-QCT jako narzędzie do oceny fenotypu blaszki — pierwotna prewencja u pacjentów z Lp(a)"
-    }
-  },
-  {
-    "slug": "2026-05-02-jacc-imaging-moo97v6d",
-    "title": "Architektury głębokiego uczenia w analizie obrazów serca — przegląd JACC",
-    "date": "2026-05-02",
-    "tags": [
-      "kardiologia",
-      "sztuczna inteligencja",
-      "obrazowanie"
-    ],
-    "excerpt": "Przegląd z JACC Cardiovascular Imaging porządkuje aktualne architektury głębokiego uczenia w analizie obrazów serca i pokazuje, gdzie kończy się obietnica, a zaczyna kliniczne zastosowanie.",
-    "image": "https://images.unsplash.com/photo-1758691463165-ca9b5bc2b28a?w=1600&h=900&fit=crop&q=80",
-    "imageAlt": "Lekarz analizujący obraz rezonansu magnetycznego na ekranie laptopa",
-    "imageOverlay": {
-      "stats": [
-        {
-          "num": "3",
-          "label": "typy zastosowań"
-        },
-        {
-          "num": "12–24",
-          "label": "miesiące synteza"
-        }
-      ],
-      "summary": "Co głębokie uczenie naprawdę zmienia w obrazowaniu serca"
     }
   },
   {
     "slug": "2026-05-02-ai-prawa-komora-ttvi",
     "title": "Sztuczna inteligencja ocenia funkcję prawej komory — i przewiduje wynik zabiegu na zastawce trójdzielnej",
     "date": "2026-05-02",
-    "tags": [
-      "kardiologia",
-      "sztuczna inteligencja",
-      "echokardiografia"
-    ],
+    "tags": ["kardiologia", "sztuczna inteligencja", "echokardiografia"],
     "excerpt": "Praca z Journal of the American Society of Echocardiography pokazuje konkretne miejsce dla sztucznej inteligencji w kardiologii strukturalnej: predykcja wyników po przezcewnikowej naprawie zastawki trójdzielnej na podstawie automatycznej analizy pracy prawej komory.",
     "image": "https://images.unsplash.com/photo-1691933880037-ce9d151ab922?w=1600&h=900&fit=crop&q=80",
     "imageAlt": "Lekarz w niebieskich rękawiczkach obsługujący urządzenie ultrasonograficzne",
     "imageOverlay": {
       "stats": [
-        {
-          "num": "28.04",
-          "label": "publikacja 2026"
-        },
-        {
-          "num": "JASE",
-          "label": "źródło"
-        }
+        {"num": "28.04", "label": "publikacja 2026"},
+        {"num": "JASE", "label": "źródło"}
       ],
       "summary": "AI jako niezależny predyktor wyników po przezcewnikowej naprawie zastawki trójdzielnej"
     }

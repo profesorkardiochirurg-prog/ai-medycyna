@@ -3,53 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI w Medycynie | dr Radosław Litwinowicz</title>
-<meta name="description" content="AI w medycynie, kardiologii i kardiochirurgii. Z perspektywy bloku operacyjnego. Komentarze, analizy i wybrane publikacje.">
+<title>Inteligentny Skalpel — AI w medycynie z perspektywy bloku operacyjnego</title>
+<meta name="description" content="Niezależny serwis o sztucznej inteligencji w medycynie, kardiologii i kardiochirurgii. Z perspektywy bloku operacyjnego. Komentarze i analizy ze źródłami.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Inteligentny Skalpel — AI w medycynie z perspektywy bloku operacyjnego">
+<meta property="og:description" content="Niezależny serwis o sztucznej inteligencji w medycynie, kardiologii i kardiochirurgii.">
+<meta property="og:url" content="https://ai-medycyna.vercel.app">
+<meta property="og:site_name" content="Inteligentny Skalpel">
+<meta property="og:locale" content="pl_PL">
 <link rel="stylesheet" href="assets/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<header class="site-header">
+<header class="masthead">
   <div class="wrap">
-    <div class="brand">
-      <strong>dr Radosław Litwinowicz</strong>
-      <span>kardiochirurg</span>
-    </div>
+    <a href="index.html" class="wordmark-link" aria-label="Inteligentny Skalpel — strona główna">
+      <h1 class="wordmark">Inteligentny Skalpel</h1>
+    </a>
+    <p class="tagline">AI w medycynie. Z perspektywy bloku operacyjnego.</p>
     <nav class="topnav">
       <a href="#artykuly">Artykuły</a>
-      <a href="#o-mnie">O mnie</a>
+      <a href="#o-autorze">O autorze</a>
       <a href="https://www.linkedin.com/in/rados%C5%82aw-litwinowicz-0b57b8262" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://x.com/BehindScalpel" target="_blank" rel="noopener">X</a>
     </nav>
   </div>
 </header>
 
-<section class="hero">
-  <div class="wrap">
-    <h1>AI w medycynie.<br><span class="accent">Z perspektywy bloku operacyjnego.</span></h1>
-    <p class="lead">Komentarze i analizy o sztucznej inteligencji w kardiologii, kardiochirurgii i medycynie. Bez przesady, z odniesieniem do źródeł.</p>
-  </div>
-</section>
-
 <main class="wrap">
 
-  <section id="artykuly">
-    <h2>Najnowsze</h2>
+  <section id="artykuly" class="section">
+    <div class="section-header">
+      <h2>Najnowsze</h2>
+    </div>
     <div id="article-list" class="articles">
       <p class="loading">Wczytuję artykuły…</p>
     </div>
   </section>
 
-  <section id="o-mnie" class="about">
-    <h2>O autorze</h2>
-    <p>Kardiochirurg z doświadczeniem klinicznym. Współautor publikacji w <em>Journal of Thoracic Disease</em> i międzynarodowych monografii. Twórca podcastu <em>Krew i Krzem</em>. Inicjator konkursu grantowego dla studenckich kół naukowych Wydziału Medycznego Politechniki Bydgoskiej.</p>
-    <p>Ten serwis zbiera komentarze do publikacji o AI w kardiologii i kardiochirurgii, w języku polskim, dla lekarzy, badaczy i osób zainteresowanych technologią w medycynie.</p>
+  <section id="o-autorze" class="section about">
+    <div class="section-header">
+      <h2>O autorze</h2>
+    </div>
+    <div class="about-content">
+      <p class="about-lead">Redaktor naczelny: <strong>dr&nbsp;Radosław Litwinowicz</strong> — kardiochirurg.</p>
+      <p>Współautor publikacji w <em>Journal of Thoracic Disease</em> i międzynarodowych monografii. Inicjator konkursu grantowego dla studenckich kół naukowych Wydziału Medycznego Politechniki Bydgoskiej. Twórca podcastu <em>Krew i Krzem</em>.</p>
+      <p class="about-mission"><em>Inteligentny Skalpel</em> komentuje publikacje o sztucznej inteligencji w medycynie z perspektywy klinicznej praktyki — bez przesady, z odniesieniem do źródeł. Materiały po polsku, kierowane do lekarzy, badaczy i osób zainteresowanych technologią w ochronie zdrowia.</p>
+    </div>
   </section>
 
 </main>
 
 <footer class="site-footer">
   <div class="wrap">
-    <p>© 2026 Radosław Litwinowicz · <a href="https://www.linkedin.com/in/rados%C5%82aw-litwinowicz-0b57b8262" target="_blank" rel="noopener">LinkedIn</a></p>
+    <p class="footer-mark">Inteligentny Skalpel</p>
+    <p class="footer-copy">© 2026 Radosław Litwinowicz · <a href="https://www.linkedin.com/in/rados%C5%82aw-litwinowicz-0b57b8262" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://x.com/BehindScalpel" target="_blank" rel="noopener">X</a></p>
   </div>
 </footer>
 

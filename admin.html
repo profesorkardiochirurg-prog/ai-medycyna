@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050d1c">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin · Inteligentny Skalpel</title>
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body { padding: 24px 0 80px; }
+  .admin-wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+  .admin-header { padding: 24px 0 32px; border-bottom: 1px solid var(--line); margin-bottom: 32px; }
+  .admin-header h1 { font-size: 26px; font-weight: 700; margin: 0 0 6px; color: var(--ink); }
+  .admin-header p { font-size: 14px; color: var(--muted); margin: 0; }
+  .admin-section {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+  .admin-section h2 {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 18px;
+  }
+  .field { margin-bottom: 16px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    display: block;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--muted-strong); margin-bottom: 6px;
+  }
+  .field-hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  input[type="text"], input[type="url"], input[type="date"], input[type="password"], textarea {
+    width: 100%;
+    background: var(--bg-deep);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--ink);
+    font: inherit;
+    font-size: 14px;
+    transition: border-color .15s;
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(30, 197, 220, 0.15);
+  }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+  textarea.tall { min-height: 200px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .channels { display: flex; gap: 16px; flex-wrap: wrap; }
+  .channels label {
+    display: flex; align-items: center; gap: 8px; cursor: pointer;
+    text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 14px;
+    color: var(--ink-soft); margin-bottom: 0;
+  }
+  .channels input { width: auto; }
+  .actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+  .btn-publish {
+    background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+    color: var(--bg-deep);
+    border: 0;
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn-publish:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(30, 197, 220, 0.25); }
+  .btn-publish:disabled { opacity: 0.5; cursor: wait; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--muted-strong);
+    border: 1px solid var(--line);
+    padding: 14px 22px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--ink); }
+  .result {
+    margin-top: 20px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    display: none;
+  }
+  .result.success { background: var(--accent-soft); border: 1px solid rgba(30, 197, 220, 0.3); color: var(--ink-soft); }
+  .result.error { background: var(--accent-red-soft); border: 1px solid rgba(255, 41, 86, 0.3); color: #ffd0d8; }
+  .result a { color: var(--accent-bright); }
+  .stats-row { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; align-items: end; }
+  @media (max-width: 600px) {
+    .row, .row3, .stats-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="admin-wrap">
+
+  <div class="admin-header">
+    <h1>Admin · publikacja artykułu</h1>
+    <p>Wypełnij formularz → publikuje na stronę + LinkedIn + X jednocześnie. Hasło na dole formularza.</p>
+  </div>
+
+  <form id="admin-form">
+
+    <div class="admin-section">
+      <h2>Podstawowe</h2>
+      <div class="field">
+        <label>Tytuł</label>
+        <input type="text" name="title" required maxlength="200" placeholder="Pełny tytuł po polsku, bez clickbaitu">
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Data</label>
+          <input type="date" name="date" required>
+        </div>
+        <div class="field">
+          <label>Tagi (po przecinku)</label>
+          <input type="text" name="tags" placeholder="kardiologia, sztuczna inteligencja">
+        </div>
+      </div>
+      <div class="field">
+        <label>Excerpt (1-2 zdania, ~280 znaków)</label>
+        <textarea name="excerpt" required maxlength="350"></textarea>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h2>Obraz hero</h2>
+      <div class="field">
+        <label>URL obrazu (Unsplash, własny upload, etc.)</label>
+        <input type="url" name="image" placeholder="https://images.unsplash.com/...">
+        <p class="field-hint">Szybko: <a href="https://unsplash.com/s/photos/cardiology-doctor" target="_blank" style="color: var(--accent)">Unsplash search</a> → kopiuj URL z domeny <code>images.unsplash.com</code>. Format: <code>?w=1600&h=900&fit=crop&q=80</code></p>
+      </div>
+      <div class="field">
+        <label>Alt text (opis dla SEO)</label>
+        <input type="text" name="imageAlt" placeholder="Lekarz analizujący obraz na ekranie">
+      </div>
+      <div class="row3">
+        <div class="field">
+          <label>Stat 1: liczba</label>
+          <input type="text" name="stat1Num" placeholder="28.04">
+        </div>
+        <div class="field" style="grid-column: span 2;">
+          <label>Stat 1: etykieta</label>
+          <input type="text" name="stat1Label" placeholder="publikacja 2026">
+        </div>
+      </div>
+      <div class="row3">
+        <div class="field">
+          <label>Stat 2: liczba</label>
+          <input type="text" name="stat2Num" placeholder="JASE">
+        </div>
+        <div class="field" style="grid-column: span 2;">
+          <label>Stat 2: etykieta</label>
+          <input type="text" name="stat2Label" placeholder="źródło">
+        </div>
+      </div>
+      <div class="field">
+        <label>Overlay summary (1 linijka, ~100 znaków)</label>
+        <input type="text" name="overlaySummary" maxlength="120" placeholder="AI jako niezależny predyktor wyników po zabiegu">
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h2>Treść artykułu</h2>
+      <div class="field">
+        <label>Akapit 1 (kontekst)</label>
+        <textarea name="para1"></textarea>
+      </div>
+      <div class="field">
+        <label>Akapit 2 (co zrobili)</label>
+        <textarea name="para2"></textarea>
+      </div>
+      <div class="field">
+        <label>Akapit 3 (wynik / implikacja)</label>
+        <textarea name="para3"></textarea>
+      </div>
+      <div class="field">
+        <label>Akapit 4 (perspektywa kardiochirurga)</label>
+        <textarea name="para4"></textarea>
+      </div>
+      <div class="field">
+        <label>Cytata źródła (Autor, Tytuł, Czasopismo, Data)</label>
+        <textarea name="sourceText"></textarea>
+      </div>
+      <div class="field">
+        <label>URL źródła (PubMed, DOI, etc.)</label>
+        <input type="url" name="sourceUrl" placeholder="https://pubmed.ncbi.nlm.nih.gov/...">
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h2>Post LinkedIn / X</h2>
+      <div class="field">
+        <label>Pełny tekst LinkedIn (200-1500 znaków, z hookiem, ✅/👉, [TU TWOJA UWAGA Z SALI: ...], hashtagami)</label>
+        <textarea name="linkedinPost" class="tall"></textarea>
+        <p class="field-hint">Pierwsza linia = hook. Hashtagi na końcu są też używane do tweeta (X).</p>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h2>Kanały publikacji</h2>
+      <div class="channels">
+        <label><input type="checkbox" name="ch_website" checked> 🌐 Strona</label>
+        <label><input type="checkbox" name="ch_linkedin" checked> 💼 LinkedIn</label>
+        <label><input type="checkbox" name="ch_twitter" checked> ✖ X (Twitter)</label>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h2>Hasło</h2>
+      <div class="field">
+        <input type="password" name="password" required placeholder="Hasło administratora" autocomplete="current-password">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn-publish" id="submit-btn">Publikuj wszędzie</button>
+      <button type="reset" class="btn-secondary">Wyczyść formularz</button>
+    </div>
+
+    <div id="result" class="result"></div>
+
+  </form>
+
+</div>
+
+<script>
+  // Default date = today
+  document.querySelector('input[name="date"]').valueAsDate = new Date();
+
+  const form = document.getElementById('admin-form');
+  const result = document.getElementById('result');
+  const submitBtn = document.getElementById('submit-btn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+
+    const draft = {
+      title: fd.get('title').trim(),
+      date: fd.get('date'),
+      tags: fd.get('tags').split(',').map(t => t.trim()).filter(Boolean),
+      excerpt: fd.get('excerpt').trim(),
+      image: fd.get('image').trim(),
+      imageAlt: fd.get('imageAlt').trim(),
+      imageOverlay: {
+        stats: [
+          { num: fd.get('stat1Num').trim(), label: fd.get('stat1Label').trim() },
+          { num: fd.get('stat2Num').trim(), label: fd.get('stat2Label').trim() },
+        ].filter(s => s.num),
+        summary: fd.get('overlaySummary').trim(),
+      },
+      bodyParagraphs: ['para1','para2','para3','para4']
+        .map(k => fd.get(k).trim()).filter(Boolean),
+      sourceText: fd.get('sourceText').trim(),
+      sourceUrl: fd.get('sourceUrl').trim(),
+      linkedinPost: fd.get('linkedinPost').trim(),
+    };
+    const channels = {
+      website: fd.get('ch_website') === 'on',
+      linkedin: fd.get('ch_linkedin') === 'on',
+      twitter: fd.get('ch_twitter') === 'on',
+    };
+    const password = fd.get('password');
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Publikuję…';
+    result.style.display = 'none';
+
+    try {
+      const res = await fetch('/api/admin-publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password, draft, channels }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        result.className = 'result error';
+        result.textContent = data.error || `Error ${res.status}`;
+        result.style.display = 'block';
+        return;
+      }
+      const lines = ['✅ Opublikowane:'];
+      if (data.website) lines.push(`🌐 Strona: ${data.website}`);
+      if (data.linkedin) lines.push(`💼 LinkedIn: ${data.linkedin}`);
+      if (data.twitter) lines.push(`✖ X: ${data.twitter}`);
+      if (data.websiteError) lines.push(`⚠️ Strona: ${data.websiteError}`);
+      if (data.linkedinError) lines.push(`⚠️ LinkedIn: ${data.linkedinError}`);
+      if (data.twitterError) lines.push(`⚠️ X: ${data.twitterError}`);
+      result.className = 'result success';
+      result.innerHTML = lines.map(l => l.replace(/(https?:\/\/\S+)/g, '<a href="$1" target="_blank">$1</a>')).join('\n');
+      result.style.display = 'block';
+    } catch (err) {
+      result.className = 'result error';
+      result.textContent = 'Błąd: ' + err.message;
+      result.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Publikuj wszędzie';
+    }
+  });
+</script>
+</body>
+</html>

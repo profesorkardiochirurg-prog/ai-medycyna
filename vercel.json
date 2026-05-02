@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/_drafts/:path*",
+      "destination": "/",
+      "permanent": false
+    }
+  ]
+}

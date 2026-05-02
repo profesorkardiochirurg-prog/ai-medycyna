@@ -192,6 +192,30 @@ async function postToLinkedIn(text, articleUrl, articleTitle, articleExcerpt, im
   return { url, withImage: !!assetUrn, imageError };
 }
 
+async function getDraftFromRepo(id) {
+  const res = await ghApi(`contents/_drafts/${id}.json`);
+  if (!res.ok) return null;
+  const data = await res.json();
+  try {
+    const draft = JSON.parse(Buffer.from(data.content, 'base64').toString('utf-8'));
+    return { ...draft, _githubSha: data.sha };
+  } catch (e) {
+    console.error('Parse draft error:', e);
+    return null;
+  }
+}
+
+async function deleteDraftFile(id, sha) {
+  if (!sha) return;
+  await ghApi(`contents/_drafts/${id}.json`, {
+    method: 'DELETE',
+    body: JSON.stringify({
+      message: `Draft handled: ${id}`,
+      sha,
+    }),
+  });
+}
+
 async function ghApi(path, options = {}) {
   return fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/${path}`, {
     ...options,
@@ -319,12 +343,12 @@ function buildArticleHtml(draft, slug) {
 `;
 }
 
-async function publishDraft(draftId) {
-  const draft = DEMO_DRAFTS[draftId];
-  if (!draft) throw new Error(`Unknown draft: ${draftId}`);
+async function publishDraft(draftId, draft) {
+  if (!draft) throw new Error(`No draft to publish: ${draftId}`);
 
   const ts = Date.now().toString(36);
-  const slug = `${draft.date}-${draftId}-${ts}`;
+  const safeId = String(draftId).replace(/[^a-z0-9-]/gi, '');
+  const slug = `${draft.date}-${safeId || 'post'}-${ts}`;
   const articlePath = `articles/${slug}.html`;
   const html = buildArticleHtml(draft, slug);
 
@@ -493,8 +517,32 @@ Po Publikuj artykuł trafi na stronę i dostaniesz osobno tekst LinkedIn do skop
 
       if (action === 'publish') {
         try {
-          const url = await publishDraft(draftId);
-          const draft = DEMO_DRAFTS[draftId];
+          // Find draft: DEMO first, then _drafts/ in repo
+          let draft = DEMO_DRAFTS[draftId];
+          let fromRepo = false;
+          if (!draft) {
+            draft = await getDraftFromRepo(draftId);
+            fromRepo = !!draft;
+          }
+          if (!draft) {
+            await tg('sendMessage', {
+              chat_id: chatId,
+              text: `❌ Draft \`${draftId}\` nie znaleziony (może już opublikowany lub odrzucony).`,
+              parse_mode: 'Markdown',
+            });
+            return res.status(200).json({ ok: true });
+          }
+
+          const url = await publishDraft(draftId, draft);
+
+          // Delete draft file from _drafts/ if it came from repo
+          if (fromRepo && draft._githubSha) {
+            try {
+              await deleteDraftFile(draftId, draft._githubSha);
+            } catch (e) {
+              console.error('Delete draft file failed (non-fatal):', e);
+            }
+          }
 
           await tg('sendMessage', {
             chat_id: chatId,
@@ -552,9 +600,18 @@ Po Publikuj artykuł trafi na stronę i dostaniesz osobno tekst LinkedIn do skop
           });
         }
       } else if (action === 'reject') {
+        // If draft is in _drafts/ repo, delete it
+        try {
+          const draft = await getDraftFromRepo(draftId);
+          if (draft && draft._githubSha) {
+            await deleteDraftFile(draftId, draft._githubSha);
+          }
+        } catch (e) {
+          console.error('Delete rejected draft failed (non-fatal):', e);
+        }
         await tg('sendMessage', {
           chat_id: chatId,
-          text: '❌ Odrzucone — draft nie zostanie opublikowany.',
+          text: '❌ Odrzucone — draft nie zostanie opublikowany i został usunięty z kolejki.',
         });
       }
     }

@@ -483,11 +483,14 @@ function buildArticleHtml(draft, slug) {
   </div>
 </header>
 
-<article class="wrap article-page">
-
-  <a class="back" href="../index.html#artykuly">← Wszystkie artykuły</a>
+<article class="wrap-narrow article-page">
+ <div class="article-shell">
 
   ${heroImage}
+
+  <div class="article-content-wrap">
+
+  <a class="back" href="../index.html#artykuly">← Wszystkie artykuły</a>
 
   <div class="meta">
     <time>${dateFormatted}</time>
@@ -507,6 +510,9 @@ function buildArticleHtml(draft, slug) {
     </div>
 
   </div>
+
+  </div>
+ </div>
 
 </article>
 

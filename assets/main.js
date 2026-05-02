@@ -17,12 +17,14 @@ async function loadArticles() {
     list.innerHTML = articles.map(a => `
       <a class="article-card" href="articles/${a.slug}.html">
         ${a.image ? `<div class="card-image"><img src="${escape(a.image)}" alt="${escape(a.imageAlt || a.title)}" loading="lazy"></div>` : ''}
-        <div class="meta">
-          <time>${formatDate(a.date)}</time>
-          ${(a.tags || []).map(t => `<span class="tag">${escape(t)}</span>`).join('')}
+        <div class="card-body">
+          <div class="meta">
+            <time>${formatDate(a.date)}</time>
+            ${(a.tags || []).map(t => `<span class="tag">${escape(t)}</span>`).join('')}
+          </div>
+          <h3>${escape(a.title)}</h3>
+          <p>${escape(a.excerpt || '')}</p>
         </div>
-        <h3>${escape(a.title)}</h3>
-        <p>${escape(a.excerpt || '')}</p>
       </a>
     `).join('');
   } catch (err) {

@@ -117,6 +117,19 @@
 
   <form id="admin-form">
 
+    <div class="admin-section" style="border-color: rgba(30, 197, 220, 0.3);">
+      <h2>⚡ Auto-fill z PubMed</h2>
+      <p style="font-size: 13px; color: var(--muted-strong); margin: 0 0 14px;">Wklej URL z PubMed albo sam PMID — formularz auto-wypełni cytatę, datę, URL źródła i overlay. Tytuł/excerpt/body trzeba przetłumaczyć ręcznie (medycznie odpowiedzialnie).</p>
+      <div class="row" style="grid-template-columns: 2fr 1fr; align-items: end;">
+        <div class="field" style="margin: 0;">
+          <label>PubMed URL lub PMID</label>
+          <input type="text" id="pubmed-input" placeholder="https://pubmed.ncbi.nlm.nih.gov/42061660/ albo 42061660">
+        </div>
+        <button type="button" id="autofill-btn" class="btn-secondary" style="margin: 0; padding: 10px 18px;">Pobierz metadane</button>
+      </div>
+      <div id="autofill-result" style="margin-top: 10px; font-size: 12px; color: var(--muted); display: none;"></div>
+    </div>
+
     <div class="admin-section">
       <h2>Podstawowe</h2>
       <div class="field">
@@ -243,6 +256,136 @@
 <script>
   // Default date = today
   document.querySelector('input[name="date"]').valueAsDate = new Date();
+
+  // PubMed auto-fill
+  const autofillBtn = document.getElementById('autofill-btn');
+  const pubmedInput = document.getElementById('pubmed-input');
+  const autofillResult = document.getElementById('autofill-result');
+
+  function extractPmid(input) {
+    if (!input) return null;
+    const trimmed = input.trim();
+    if (/^\d+$/.test(trimmed)) return trimmed;
+    const m = trimmed.match(/\/(\d{6,})\/?/);
+    return m ? m[1] : null;
+  }
+
+  function journalAcronym(name) {
+    if (!name) return '';
+    const known = {
+      'New England Journal of Medicine': 'NEJM',
+      'Journal of the American Medical Association': 'JAMA',
+      'JAMA': 'JAMA',
+      'Lancet': 'Lancet',
+      'The Lancet': 'Lancet',
+      'European Heart Journal': 'EHJ',
+      'Circulation': 'Circulation',
+      'Journal of the American College of Cardiology': 'JACC',
+      'JACC. Cardiovascular Imaging': 'JACC Img',
+      'JACC: Cardiovascular Imaging': 'JACC Img',
+      'Journal of the American Society of Echocardiography': 'JASE',
+      'European Journal of Preventive Cardiology': 'EJPC',
+      'Nature Medicine': 'Nat Med',
+      'Lancet Digital Health': 'Lancet DH',
+      'NPJ Digital Medicine': 'npj DigMed',
+      'Future Cardiology': 'Future Cardiol',
+    };
+    if (known[name]) return known[name];
+    return name.split(/\s+/).filter(w => /^[A-Z]/.test(w)).map(w => w[0]).join('').slice(0, 6);
+  }
+
+  function shortDate(pubdate) {
+    // Examples: "2026 Apr 28", "2026 Apr", "2026"
+    if (!pubdate) return '';
+    const months = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+    const m = pubdate.match(/(\d{4})\s+(\w+)(?:\s+(\d+))?/);
+    if (m && m[3]) return `${m[3].padStart(2,'0')}.${months[m[2].slice(0,3)] || '01'}`;
+    if (m) return `01.${months[m[2].slice(0,3)] || '01'}`;
+    return '';
+  }
+
+  function isoDate(pubdate) {
+    if (!pubdate) return new Date().toISOString().slice(0, 10);
+    const months = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+    const m = pubdate.match(/(\d{4})\s+(\w+)(?:\s+(\d+))?/);
+    if (m) {
+      const yr = m[1];
+      const mo = months[m[2].slice(0,3)] || '01';
+      const day = (m[3] || '01').padStart(2,'0');
+      return `${yr}-${mo}-${day}`;
+    }
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  autofillBtn.addEventListener('click', async () => {
+    const pmid = extractPmid(pubmedInput.value);
+    if (!pmid) {
+      autofillResult.style.display = 'block';
+      autofillResult.style.color = 'var(--accent-red)';
+      autofillResult.textContent = 'Nie wykryto PMID. Wklej pełny URL z PubMed lub sam numer (np. 42061660).';
+      return;
+    }
+    autofillBtn.disabled = true;
+    autofillBtn.textContent = 'Pobieram…';
+    autofillResult.style.display = 'block';
+    autofillResult.style.color = 'var(--muted)';
+    autofillResult.textContent = 'Łączę z NCBI E-utilities…';
+
+    try {
+      const res = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`);
+      const data = await res.json();
+      const item = data.result?.[pmid];
+      if (!item || item.error) throw new Error('PMID nie znaleziony albo nieprawidłowy.');
+
+      const authors = (item.authors || []).map(a => a.name);
+      const authorsShort = authors.length > 3
+        ? `${authors.slice(0, 3).join(', ')} et al`
+        : authors.join(', ');
+      const journal = item.fulljournalname || item.source || '';
+      const journalShort = journalAcronym(journal);
+      const titleEng = (item.title || '').replace(/\.$/, '');
+      const sourceText = `${authorsShort}. ${titleEng}. ${item.source || journal}. ${item.pubdate || ''}.`;
+      const sourceUrl = `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`;
+
+      // Fill fields
+      const f = (name, val) => { const el = form.elements[name]; if (el && val) el.value = val; };
+      f('sourceText', sourceText);
+      f('sourceUrl', sourceUrl);
+      f('date', isoDate(item.pubdate));
+      f('stat1Num', shortDate(item.pubdate));
+      f('stat1Label', `publikacja ${item.pubdate?.match(/\d{4}/)?.[0] || '2026'}`);
+      f('stat2Num', journalShort);
+      f('stat2Label', 'źródło');
+      // Default tags + suggestion based on title
+      const tagsField = form.elements['tags'];
+      if (!tagsField.value) {
+        const titleLow = titleEng.toLowerCase();
+        const guessedTags = ['kardiologia', 'sztuczna inteligencja'];
+        if (/echo/i.test(titleLow)) guessedTags.push('echokardiografia');
+        else if (/imaging|mri|ct|tomograph/i.test(titleLow)) guessedTags.push('obrazowanie');
+        else if (/ecg|electrocardiogram/i.test(titleLow)) guessedTags.push('EKG');
+        else if (/surger|aortic|valve|cabg|tavi|ttvi/i.test(titleLow)) guessedTags.push('kardiochirurgia');
+        tagsField.value = guessedTags.join(', ');
+      }
+      // Suggest title (English) - user translates
+      if (!form.elements['title'].value) {
+        form.elements['title'].placeholder = `[do tłumaczenia] ${titleEng}`;
+      }
+      // Suggest excerpt template
+      if (!form.elements['excerpt'].value) {
+        form.elements['excerpt'].placeholder = `Praca z ${journalShort || journal} (${item.pubdate || ''}) o ...`;
+      }
+
+      autofillResult.style.color = 'var(--accent-bright)';
+      autofillResult.innerHTML = `✅ Wypełniono: cytata, data, URL źródła, overlay, tagi. Zostaje: <strong>tytuł PL, excerpt PL, body, post LinkedIn</strong>.<br><strong>Tytuł oryginalny (do przetłumaczenia):</strong> ${titleEng}`;
+    } catch (err) {
+      autofillResult.style.color = 'var(--accent-red)';
+      autofillResult.textContent = `Błąd: ${err.message}`;
+    } finally {
+      autofillBtn.disabled = false;
+      autofillBtn.textContent = 'Pobierz metadane';
+    }
+  });
 
   const form = document.getElementById('admin-form');
   const result = document.getElementById('result');

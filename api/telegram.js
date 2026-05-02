@@ -1,8 +1,14 @@
+import crypto from 'crypto';
+
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const ALLOWED_CHAT_ID = String(process.env.ALLOWED_CHAT_ID || '');
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const LINKEDIN_ACCESS_TOKEN = process.env.LINKEDIN_ACCESS_TOKEN;
 const LINKEDIN_USER_ID = process.env.LINKEDIN_USER_ID;
+const TWITTER_API_KEY = process.env.TWITTER_API_KEY;
+const TWITTER_API_SECRET = process.env.TWITTER_API_SECRET;
+const TWITTER_ACCESS_TOKEN = process.env.TWITTER_ACCESS_TOKEN;
+const TWITTER_ACCESS_TOKEN_SECRET = process.env.TWITTER_ACCESS_TOKEN_SECRET;
 const REPO_OWNER = 'profesorkardiochirurg-prog';
 const REPO_NAME = 'ai-medycyna';
 const SITE_URL = 'https://ai-medycyna.vercel.app';
@@ -59,6 +65,109 @@ async function tg(method, payload) {
   });
   return res.json();
 }
+
+// ============ X (Twitter) helpers ============
+
+function rfc3986(str) {
+  return encodeURIComponent(String(str))
+    .replace(/!/g, '%21')
+    .replace(/\*/g, '%2A')
+    .replace(/'/g, '%27')
+    .replace(/\(/g, '%28')
+    .replace(/\)/g, '%29');
+}
+
+function buildTwitterAuthHeader(method, url, extraOauthParams = {}) {
+  const oauthParams = {
+    oauth_consumer_key: TWITTER_API_KEY,
+    oauth_nonce: crypto.randomBytes(16).toString('hex'),
+    oauth_signature_method: 'HMAC-SHA1',
+    oauth_timestamp: Math.floor(Date.now() / 1000).toString(),
+    oauth_token: TWITTER_ACCESS_TOKEN,
+    oauth_version: '1.0',
+    ...extraOauthParams,
+  };
+
+  const paramString = Object.keys(oauthParams)
+    .sort()
+    .map(k => `${rfc3986(k)}=${rfc3986(oauthParams[k])}`)
+    .join('&');
+
+  const baseString = [
+    method.toUpperCase(),
+    rfc3986(url),
+    rfc3986(paramString),
+  ].join('&');
+
+  const signingKey = `${rfc3986(TWITTER_API_SECRET)}&${rfc3986(TWITTER_ACCESS_TOKEN_SECRET)}`;
+
+  const signature = crypto.createHmac('sha1', signingKey).update(baseString).digest('base64');
+  oauthParams.oauth_signature = signature;
+
+  const headerParams = Object.keys(oauthParams)
+    .sort()
+    .map(k => `${rfc3986(k)}="${rfc3986(oauthParams[k])}"`)
+    .join(', ');
+
+  return 'OAuth ' + headerParams;
+}
+
+function composeTweet(draft, articleUrl) {
+  // First non-empty line of linkedinPost is typically the hook
+  const lines = (draft.linkedinPost || '').split('\n').map(l => l.trim()).filter(Boolean);
+  let hook = lines[0] || draft.title;
+
+  // X URL shortener t.co counts every URL as 23 chars regardless
+  const URL_BUDGET = 23 + 2; // url + 2 newlines
+  const HASHTAGS_BUDGET = 30;
+  const maxHook = 280 - URL_BUDGET - HASHTAGS_BUDGET - 2;
+
+  if (hook.length > maxHook) {
+    hook = hook.slice(0, maxHook - 1).replace(/\s\S*$/, '') + '…';
+  }
+
+  // 2 short hashtags from tags array (skip "sztuczna inteligencja" — too long)
+  const shortTags = (draft.tags || [])
+    .filter(t => t.length <= 12 && t !== 'sztuczna inteligencja')
+    .slice(0, 2)
+    .map(t => '#' + t.replace(/\s+/g, ''));
+  const tagsLine = shortTags.length ? shortTags.join(' ') : '#kardiologia #AI';
+
+  return `${hook}\n\n${articleUrl}\n\n${tagsLine}`;
+}
+
+async function postToTwitter(tweetText) {
+  if (!TWITTER_API_KEY || !TWITTER_API_SECRET || !TWITTER_ACCESS_TOKEN || !TWITTER_ACCESS_TOKEN_SECRET) {
+    throw new Error('Twitter API credentials not configured');
+  }
+
+  const url = 'https://api.twitter.com/2/tweets';
+  const authHeader = buildTwitterAuthHeader('POST', url);
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': authHeader,
+      'Content-Type': 'application/json',
+      'User-Agent': 'ai-medycyna-bot',
+    },
+    body: JSON.stringify({ text: tweetText }),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Twitter ${res.status}: ${errText.slice(0, 300)}`);
+  }
+
+  const data = await res.json();
+  const tweetId = data?.data?.id;
+  if (tweetId) {
+    return `https://x.com/i/status/${tweetId}`;
+  }
+  return 'https://x.com';
+}
+
+// ============ LinkedIn helpers ============
 
 async function uploadImageToLinkedIn(imageUrl) {
   // 1. Register upload
@@ -575,26 +684,32 @@ Po Publikuj artykuł trafi na stronę i dostaniesz osobno tekst LinkedIn do skop
               console.error('LinkedIn post error:', liErr);
               await tg('sendMessage', {
                 chat_id: chatId,
-                text: `⚠️ *Błąd LinkedIn* — artykuł na stronie się opublikował, ale LinkedIn odmówił:\n\n${liErr.message}\n\nTu masz tekst do ręcznego wklejenia:`,
+                text: `⚠️ *Błąd LinkedIn*: ${liErr.message}`,
                 parse_mode: 'Markdown',
               });
+            }
+          }
+
+          // Post to X (Twitter)
+          if (draft && TWITTER_API_KEY && TWITTER_ACCESS_TOKEN) {
+            try {
+              const tweetText = composeTweet(draft, url);
+              const tweetUrl = await postToTwitter(tweetText);
               await tg('sendMessage', {
                 chat_id: chatId,
-                text: draft.linkedinPost,
+                text: `✅ *Opublikowano na X*\n\n${tweetUrl}`,
+                parse_mode: 'Markdown',
+              });
+            } catch (twErr) {
+              console.error('Twitter post error:', twErr);
+              await tg('sendMessage', {
+                chat_id: chatId,
+                text: `⚠️ *Błąd X*: ${twErr.message}`,
+                parse_mode: 'Markdown',
               });
             }
-          } else if (draft && draft.linkedinPost) {
-            // LinkedIn not configured — fall back to manual paste
-            await tg('sendMessage', {
-              chat_id: chatId,
-              text: '📋 *Wersja LinkedIn — skopiuj i wklej:*',
-              parse_mode: 'Markdown',
-            });
-            await tg('sendMessage', {
-              chat_id: chatId,
-              text: draft.linkedinPost,
-            });
           }
+
         } catch (err) {
           console.error('Publish error:', err);
           await tg('sendMessage', {

@@ -1,9 +1,24 @@
 [
   {
+    "slug": "2026-05-02-jacc-imaging-moo5m2j9",
+    "title": "Architektury deep learning w analizie obrazów serca — przegląd JACC",
+    "date": "2026-05-02",
+    "tags": [
+      "kardio",
+      "AI",
+      "obrazowanie"
+    ],
+    "excerpt": "Przegląd z JACC Cardiovascular Imaging porządkuje aktualne architektury deep learning w analizie obrazów serca i pokazuje, gdzie kończy się hype, a zaczyna kliniczne zastosowanie."
+  },
+  {
     "slug": "2026-05-02-ai-prawa-komora-ttvi",
     "title": "AI ocenia funkcję prawej komory — i przewiduje wynik zabiegu na zastawce trójdzielnej",
     "date": "2026-05-02",
-    "tags": ["kardio", "AI", "echo"],
+    "tags": [
+      "kardio",
+      "AI",
+      "echo"
+    ],
     "excerpt": "Praca z J Am Soc Echocardiogr pokazuje konkretne miejsce dla AI w kardiologii strukturalnej: predykcja wyników po TTVI na podstawie automatycznej analizy pracy prawej komory."
   }
 ]

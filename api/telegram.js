@@ -347,8 +347,11 @@ async function publishDraft(draftId, draft) {
   if (!draft) throw new Error(`No draft to publish: ${draftId}`);
 
   const ts = Date.now().toString(36);
-  const safeId = String(draftId).replace(/[^a-z0-9-]/gi, '');
-  const slug = `${draft.date}-${safeId || 'post'}-${ts}`;
+  let safeId = String(draftId).replace(/[^a-z0-9-]/gi, '');
+  // If draftId already starts with the date (from injected drafts), don't double-prefix.
+  const datePrefix = `${draft.date}-`;
+  let slugBase = safeId.startsWith(datePrefix) ? safeId : `${draft.date}-${safeId || 'post'}`;
+  const slug = `${slugBase}-${ts}`;
   const articlePath = `articles/${slug}.html`;
   const html = buildArticleHtml(draft, slug);
 

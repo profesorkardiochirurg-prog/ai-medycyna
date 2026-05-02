@@ -1,5 +1,31 @@
 [
   {
+    "slug": "2026-05-02-2026-05-02-e758j0p0-moo9n8gu",
+    "title": "AI-QCT mierzy fenotyp blaszek miażdżycowych — co to zmienia w prewencji pierwotnej",
+    "date": "2026-05-02",
+    "tags": [
+      "kardiologia",
+      "sztuczna inteligencja",
+      "tomografia komputerowa"
+    ],
+    "excerpt": "Praca z European Journal of Preventive Cardiology pokazuje, że algorytm AI-QCT analizujący tomografię komputerową tętnic wieńcowych zmienia ocenę ryzyka u pacjentów z lipoproteiną(a) — i może przeklasyfikować decyzje terapeutyczne w prewencji pierwotnej.",
+    "image": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&h=900&fit=crop&q=80",
+    "imageAlt": "Sprzęt medyczny — tomograf komputerowy w pracowni",
+    "imageOverlay": {
+      "stats": [
+        {
+          "num": "29.04",
+          "label": "publikacja 2026"
+        },
+        {
+          "num": "EJPC",
+          "label": "źródło"
+        }
+      ],
+      "summary": "AI-QCT jako narzędzie do oceny fenotypu blaszki — pierwotna prewencja u pacjentów z Lp(a)"
+    }
+  },
+  {
     "slug": "2026-05-02-jacc-imaging-moo97v6d",
     "title": "Architektury głębokiego uczenia w analizie obrazów serca — przegląd JACC",
     "date": "2026-05-02",

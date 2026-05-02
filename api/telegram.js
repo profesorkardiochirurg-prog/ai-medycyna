@@ -143,7 +143,7 @@ function buildOverlay(overlay) {
     </div>`;
 }
 
-function buildArticleHtml(draft) {
+function buildArticleHtml(draft, slug) {
   const tags = draft.tags.map(t => `<span class="tag">${escape(t)}</span>`).join('\n      ');
   const paras = draft.bodyParagraphs.map(p => `<p>${escape(p)}</p>`).join('\n    ');
   const dateFormatted = formatDate(draft.date);
@@ -154,6 +154,12 @@ function buildArticleHtml(draft) {
   </figure>`
     : '';
 
+  // OpenGraph image: prefer the article's hero image (Unsplash). Optimize for 1200x630.
+  const ogImage = draft.image
+    ? draft.image.replace(/[?&](w|h|fit|q)=[^&]*/g, '').replace(/\?+$/, '') + '?w=1200&h=630&fit=crop&q=80'
+    : `${SITE_URL}/og-default.jpg`;
+  const articleUrl = slug ? `${SITE_URL}/articles/${slug}.html` : SITE_URL;
+
   return `<!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -161,6 +167,17 @@ function buildArticleHtml(draft) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escape(draft.title)} | dr Radosław Litwinowicz</title>
 <meta name="description" content="${escape(draft.excerpt)}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="${escape(draft.title)}">
+<meta property="og:description" content="${escape(draft.excerpt)}">
+<meta property="og:image" content="${escape(ogImage)}">
+<meta property="og:url" content="${escape(articleUrl)}">
+<meta property="og:site_name" content="AI w Medycynie · dr Radosław Litwinowicz">
+<meta property="og:locale" content="pl_PL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escape(draft.title)}">
+<meta name="twitter:description" content="${escape(draft.excerpt)}">
+<meta name="twitter:image" content="${escape(ogImage)}">
 <link rel="stylesheet" href="../assets/styles.css">
 </head>
 <body>
@@ -224,7 +241,7 @@ async function publishDraft(draftId) {
   const ts = Date.now().toString(36);
   const slug = `${draft.date}-${draftId}-${ts}`;
   const articlePath = `articles/${slug}.html`;
-  const html = buildArticleHtml(draft);
+  const html = buildArticleHtml(draft, slug);
 
   // 1. Create new article HTML file
   const articleContent = Buffer.from(html, 'utf-8').toString('base64');
